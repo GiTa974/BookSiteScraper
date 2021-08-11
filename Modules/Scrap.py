@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-from Category import Category
+from Modules.Category import Category
 import configparser
+import os
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -10,6 +12,7 @@ UrlToScrap = config["DEFAULT"]['urlToScrap']
 
 class Scrap:
     """
+    Scrap objects
     """
     def __init__(self, name, UrlToScrap):
         self.name = name
@@ -17,7 +20,7 @@ class Scrap:
         self.books = []
     
     # @staticmethod
-    def getCategories(self):
+    def getCategories(self, subFolder):
         """
         Get categories from home page
         """
@@ -42,6 +45,7 @@ class Scrap:
                     newCategory = Category(name, url)
                     # newCategory = self.getBooksFromCategory(newCategory)
                     allCategories.append(newCategory)
+                    os.mkdir(subFolder + newCategory.name) # Create a folder to store book's picture
             except :
                 print("none")
         print(len(allCategories))
@@ -105,9 +109,9 @@ class Scrap:
         except :
             description = "none"
         if len(description) > 100 :
-            BookDict["description"] = description[:100].replace("\r\n"," ").replace(";",",")
+            BookDict["description"] = description[:100].replace("\r\n"," ").replace(";",",").replace("\""," ").replace("\'"," ")
         else :
-            BookDict["description"] = description.replace(";",",")
+            BookDict["description"] = description.replace("\r\n"," ").replace(";",",").replace("\""," ").replace("\'"," ")
         # get rating
         try :
             if len(soupBook.find("p", {"class": "star-rating One"}).parent.find("h1")) > 0 :

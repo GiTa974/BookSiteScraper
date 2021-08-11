@@ -1,8 +1,10 @@
-from Category import Category
-from Book import Book
-from Scrap import Scrap
-from CSVCreator import CSVCreator
+from Modules.Category import Category
+from Modules.Book import Book
+from Modules.Scrap import Scrap
+from Modules.CSVCreator import CSVCreator
 import configparser
+from datetime import datetime
+import os
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -17,23 +19,23 @@ else :
 
 ## Main boucle
 if __name__ == "__main__":
+    now = datetime.now()
+    workingDirectory = "./" + now.strftime("%Y%m%d_%Hh%Mm%S") + "_BookScrap/"
+    os.mkdir(workingDirectory) # create a unic working directory
     myScrap = Scrap("scrapping a book site", UrlToScrap)
-    allCategories = myScrap.getCategories()
+    allCategories = myScrap.getCategories(workingDirectory)
     # print(allCategories)
-    # myScrap.getBooksFromCategory(allCategories[0])
     for index, category in enumerate(allCategories) :
         # print(category)
         if index < testlimit : # limit to test
-            myCSVCategory = CSVCreator(category.name)
+            myCSVCategory = CSVCreator(category.name, workingDirectory)
             myScrap.getBooksFromCategory(category)
             print(category.books)
             for book in category.books :
-                # print("current book is : " + str(book))
                 bookInfos = myScrap.getBookInfos(book["Book url"], category)
-                # print("book infos : " + str(bookInfos))
                 newBook = Book(bookInfos)
-                # print(newBook)
                 myCSVCategory.addBookAsLine(newBook)
+                myCSVCategory.addBookAsPic(newBook)
             myCSVCategory.close()
         else :
             break
