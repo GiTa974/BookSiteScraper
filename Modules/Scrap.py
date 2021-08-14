@@ -12,7 +12,7 @@ UrlToScrap = config["DEFAULT"]['urlToScrap']
 
 class Scrap:
     """
-    Scrap objects
+    Scrap objects like Books and Categories
     """
     def __init__(self, name, UrlToScrap):
         self.name = name

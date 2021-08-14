@@ -8,7 +8,7 @@ first_line = config["DEFAULT"]['firstLine']
 
 class CSVCreator:
     """
-    Class who create the output CSV
+    Class who create the output CSV and a folder by category to store book illustration
     """
     def __init__(self, categoryName, subFolderName) : 
         """

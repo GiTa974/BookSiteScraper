@@ -1,6 +1,6 @@
 class Book:
     """
-    Class for create a book from dict
+    Class for create a book from the dict generated in Scrap module
     """
     def __init__(self, bookInfos):
         self.URL = bookInfos["url"]
